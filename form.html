@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+</head>
+
+<body>
+  <div class="col-lg-5 col-md-12" data-aos="fade-up" data-aos-delay="300">
+    <form id="contact-form" action="" method="post" role="form">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" required>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+      </div>
+      <div>
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject" id="subject" required>
+      </div>
+      <div>
+        <label for="message">Message:</label>
+        <textarea name="message" id="message" rows="5" required></textarea>
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function () {
+      emailjs.init("YOUR_EMAILJS_USER_ID");
+    })();
+  </script>
+  <script>
+    document.getElementById("contact-form").onsubmit = function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const subject = document.getElementById("subject").value;
+      const message = document.getElementById("message").value;
+
+      // Simple validation
+      if (name.trim() === "" || !isValidEmail(email) || subject.trim() === "" || message.trim() === "") {
+        alert("Please fill in all fields correctly.");
+        return false;
+      }
+
+      // Prepare the data for EmailJS
+      const templateParams = {
+        from_name: name,
+        to_name: email,
+        subject: subject,
+        message_html: message,
+      };
+
+      // Send the email using EmailJS
+      emailjs.send("YOUR_EMAILJS_SERVICE_ID", "YOUR_EMAILJS_TEMPLATE_ID", templateParams)
+        .then(function (response) {
+          console.log("Email sent successfully!", response);
+          // Show success message to the user
+          alert("Thank you for your message! We'll be in touch shortly.");
+          // You can redirect the user to a thank-you page here if needed
+        }, function (error) {
+          console.log("Failed to send email:", error);
+          // Show error message to the user
+          alert("Sorry, there was an error sending your message. Please try again later.");
+        });
+
+      return false;
+    };
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+  </script>
+</body>
+
+</html>
